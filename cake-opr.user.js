@@ -5,7 +5,8 @@
 // @namepsace https://opr.ingress.com
 // @version 0.1.1
 // @date 2017-07-09
-// @match https://opr.ingress.com/recon
+// @match https://opr.ingress.com/recon*
+// @include https://opr.ingress.com/recon*
 // @require http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // ==/UserScript==
 
@@ -29,12 +30,14 @@
     displayStatsAllTheTime();
 
     function disableAutomaticScrolling() {
-        // Disable scrolling when clicking ratings
-        var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
-        w.angular.element($(divTitleAndDesc)).scope().answerCtrl.goToLocation = null;
+        $( document ).ready( function() {
+            // Disable scrolling when clicking ratings
+            var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
+            w.angular.element($(divTitleAndDesc)).scope().answerCtrl.goToLocation = null;
+        });
     }
 
-    function moveSectionsAbout () {
+    function moveSectionsAbout() {
         $(rowOriginalTwo).insertBefore($(rowOriginalOne));
         $(divPicAndShouldIt).insertBefore($(divDuplicates));
         $(divCheckLocation).insertBefore($(divTitleAndDesc));
@@ -101,7 +104,7 @@
 
     }
 
-    function addFullSizeImageLinks ()  {
+    function addFullSizeImageLinks()  {
         // Main portal for review image has loaded
         $('div[class="ingress-background"] > img:eq(0)').on('load', function () {
             $('<a>')

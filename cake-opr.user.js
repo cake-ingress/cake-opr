@@ -3,8 +3,8 @@
 // @description Improving the user experience of https://opr.ingress.com/recon
 // @homepageURL https://github.com/cake-ingress/cake-opr
 // @namepsace https://opr.ingress.com
-// @version 0.1.1
-// @date 2017-07-09
+// @version 0.1.2
+// @date 2017-07-15
 // @match https://opr.ingress.com/recon*
 // @include https://opr.ingress.com/recon*
 // @require http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -174,16 +174,38 @@
         if (statRejectedPercent === 'Infinity') statRejectedPercent = '?';
         if (statPendingPercent === 'Infinity'||isNaN(statPendingPercent)) statPendingPercent = '?';
 
+        var badgeCounts = [ 0, 100, 750, 2500, 5000, 10000 ];
+        var badgeNames = [ 'None', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Onyx' ];
+        var totalForBadge = statCreated + statRejected;
+        var badgeLevel = 0;
+
+        $.each(badgeCounts, function(index, value) {
+            if ( totalForBadge > value ) {
+                badgeLevel = index;
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        var badgeNameText = badgeNames[badgeLevel];
+        var badgeAltText = badgeCounts[badgeLevel]+' - '+( badgeCounts[badgeLevel+1]-1 );
+        var badgeToGo = badgeCounts[badgeLevel+1] - totalForBadge||'-';
+        var badgeNextNameText = badgeNames[badgeLevel+1]||'-';
+
         $('<span>')
             .insertBefore($('button.pull-right'))
             .css('white-space', 'pre')
-            .html(statLevel+
-                '  /  <small>Analysed: '+(statAnalysed||'?')+
-                '</small>  /  <small>Created: '+(statCreated||'?')+' - '+
+            .css('float', 'left')
+            .html(statLevel+'  /  <span title="'+badgeAltText+'">'+badgeNameText+ ' badge '+
+                totalForBadge.toLocaleString()+
+                '  <small>/  '+badgeToGo.toLocaleString()+' to get '+badgeNextNameText+'</small></span><br>'+
+                '<small>Analysed: '+(statAnalysed.toLocaleString()||'?')+
+                '</small>  /  <small>Created: '+(statCreated.toLocaleString()||'?')+' - '+
                     (statCreatedPercent||'?')+'%'+
-                '</small>  /  <small>Rejected: '+(statRejected||'?')+' - '+
+                '</small>  /  <small>Rejected: '+(statRejected.toLocaleString()||'?')+' - '+
                     (statRejectedPercent||'?')+'%'+
-                '</small>  /  <small>Other: '+(statPending||'?')+' - '+
+                '</small>  /  <small>Other: '+(statPending.toLocaleString()||'?')+' - '+
                     (statPendingPercent||'?')+'%</small>'
             );
     }

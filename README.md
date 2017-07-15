@@ -12,6 +12,8 @@ KISS - Keep It Simple Stupid!
 There's many of these user scripts for Ingress OPR (https://opr.ingress.com/recon) out there. I just wanted to create something simple to fix a few UX annoyances of mine though, not something that adds a ton of new buttons and links making the interface even busier.
 
 ## Features
+See change history [here](changes.md)
+
 * Move sections around:
   * Duplicates section to the top of page
   * Portal details to below the image

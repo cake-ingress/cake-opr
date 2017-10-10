@@ -1,3 +1,8 @@
+## v0.1.3
+* Fixed layout tweaks since OPR source changes
+* Removed links to fille size images as now supported natively
+* Removed code to disable automatic scrolling as now supported natively (see 'Settings')
+
 ## v0.1.2
 * Added badge stat details to top header
 

@@ -21,21 +21,11 @@
     var divTitleAndDesc = $(rowOriginalOne).children('#descriptionDiv');
     var divRatings = $(rowOriginalOne).children('div:eq(2)');
 
-    var divCheckLocation = $(rowOriginalTwo).children('div:eq(0)');
-    var divDuplicates = $(rowOriginalTwo).children('div:eq(1)');
+    var divDuplicates = $(rowOriginalTwo).children('div:eq(0)');
+    var divCheckLocation = $(rowOriginalTwo).children('div:eq(2)');
 
-    disableAutomaticScrolling();
     moveSectionsAbout();
-    addFullSizeImageLinks();
     displayStatsAllTheTime();
-
-    function disableAutomaticScrolling() {
-        $( document ).ready( function() {
-            // Disable scrolling when clicking ratings
-            var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
-            w.angular.element($(divTitleAndDesc)).scope().answerCtrl.goToLocation = null;
-        });
-    }
 
     function moveSectionsAbout() {
         $(rowOriginalTwo).insertBefore($(rowOriginalOne));
@@ -72,6 +62,7 @@
 
         $(divDuplicates)
             .removeClass('col-sm-6')
+            .removeClass('col-sm-push-6')
             .addClass('col-sm-12');
 
         $(divRatings)
@@ -79,16 +70,26 @@
 
         $(divCheckLocation)
             .removeClass('col-sm-6')
+            .removeClass('col-sm-pull-6')
             .addClass('col-sm-8');
 
         $(divRatings)
-            .append('<br><br><br><br>')
-            .append($(divCheckLocation).children('div:eq(1)')) // Is it accurant text
+            .prepend('<br><br>')
+            .append('<br><br>')
+            .append($(divCheckLocation).children('div:eq(1)')) // Is it accurate text
             .append($(divCheckLocation).children("div[class='btn-group']:eq(0)")) // Is it accurate buttons
             .append($(divCheckLocation).children("div[ng-show='!subCtrl.draggableMarker']")) // Suggest disabled text
             .append($(divCheckLocation).children("div[ng-show='subCtrl.draggableMarker']")) // Suggest enabled text
             .append($(divCheckLocation).children("div[id='safetyDiv']")) // Safe access text
             .append($(divCheckLocation).children("div[class='btn-group']:eq(0)")); // Safe access buttons
+
+        $(divRatings) // Move 'Suggest a new location'
+            .children('div:eq(3)')
+            .insertBefore(
+                $(divRatings).children('div:eq(1)')
+            )
+            .append('<br><br>')
+            .children('p').css('font-size', '30px');
 
         $(container).children('div:last') // Comments
             .addClass('col-sm-6')
@@ -102,45 +103,8 @@
         $("div[id='submitDiv'")
             .insertBefore($(rowFour));
 
-    }
-
-    function addFullSizeImageLinks()  {
-        // Main portal for review image has loaded
-        $('div[class="ingress-background"] > img:eq(0)').on('load', function () {
-            $('<a>')
-                .insertAfter($(divPicAndShouldIt).children('div[class="ingress-background"]'))
-                .attr('href', $('div[class="ingress-background"] > img:eq(0)').attr('src') + '=s0')
-                .attr('target', '_blank')
-                .text('Full size image')
-                .css('font-weight', 'bold');
-        });
-
-        // When the map is clicked, if info bubble appears
-        $('div#map').on('click', thumbnailBigLink);
-
-        // When a thumbnail in the scrolling list is clicked
-        $('div#map-filmstrip > ul').on('click', thumbnailBigLink);
-
-        // Check if needed and make link to full size image if so
-        function thumbnailBigLink() {
-            if (
-                $('div#content').is(':visible') && // Info bubble
-                !$('#thumbnailBigLink').is(':visible') // No link already
-            ) {
-                $('<a>')
-                    .insertAfter('div#content > img')
-                    .attr('href', $('div#content img').attr('src') + '=s0')
-                    .attr('target', '_blank')
-                    .attr('id', 'thumbnailBigLink')
-                    .text('Full size image')
-                    .css('font-weight', 'bold')
-                    .css('padding-top', '10px')
-                    .css('padding-bottom', '10px');
-
-                $('<br>')
-                    .insertAfter('div#content > img');
-            }
-        }
+        $("div[id='street-view")
+            .css('height', '500px');
     }
 
     function displayStatsAllTheTime() {
@@ -199,7 +163,7 @@
             .css('float', 'left')
             .html(statLevel+'  /  <span title="'+badgeAltText+'">'+badgeNameText+ ' badge '+
                 totalForBadge.toLocaleString()+
-                '  <small>/  '+badgeToGo.toLocaleString()+' to get '+badgeNextNameText+'</small></span><br>'+
+                '  /  '+badgeToGo.toLocaleString()+' to get '+badgeNextNameText+'</span><br>'+
                 '<small>Analysed: '+(statAnalysed.toLocaleString()||'?')+
                 '</small>  /  <small>Created: '+(statCreated.toLocaleString()||'?')+' - '+
                     (statCreatedPercent||'?')+'%'+

@@ -3,8 +3,8 @@
 // @description Improving the user experience of https://opr.ingress.com/recon
 // @homepageURL https://github.com/cake-ingress/cake-opr
 // @namepsace https://opr.ingress.com
-// @version 0.1.2
-// @date 2017-07-15
+// @version 0.1.3
+// @date 2017-10-14
 // @match https://opr.ingress.com/recon*
 // @include https://opr.ingress.com/recon*
 // @require http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js

@@ -1,3 +1,8 @@
+## v0.1.4
+* Moved stats display to main body so it will work on mobile/smaller screens (see readme for a tip on how to get this to work on mobile)
+* Added 'Agreed' stats
+* Renamed 'Pending' to 'Other' (this is disagreements and pending)
+
 ## v0.1.3
 * Fixed layout tweaks since OPR source changes
 * Removed links to fille size images as now supported natively

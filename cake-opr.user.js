@@ -3,8 +3,8 @@
 // @description Improving the user experience of https://opr.ingress.com/recon
 // @homepageURL https://github.com/cake-ingress/cake-opr
 // @namepsace https://opr.ingress.com
-// @version 0.1.3
-// @date 2017-10-14
+// @version 0.1.4
+// @date 2018-03-31
 // @match https://opr.ingress.com/recon*
 // @include https://opr.ingress.com/recon*
 // @require http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -126,17 +126,20 @@
         var statAnalysed = parseInt($('div#player_stats > div > p:eq(1) > span:last').text(), 10)||null;
         var statCreated = parseInt($('div#player_stats > div > p:eq(2) > span:last').text(), 10)||null;
         var statRejected = parseInt($('div#player_stats > div > p:eq(3) > span:last').text(), 10)||null;
-        var statPending = ((statAnalysed - statCreated) - statRejected)||null;
+        var statOther = ((statAnalysed - statCreated) - statRejected)||null;
+        var statAgreed = (statAnalysed - statOther)||null;
 
-        if (statPending < 0) statPending = null;
+        if (statOther < 0) statOther = null;
 
         var statCreatedPercent = (statCreated / (statAnalysed / 100)).toFixed()||null;
         var statRejectedPercent = (statRejected / (statAnalysed / 100)).toFixed()||null;
-        var statPendingPercent = (statPending / (statAnalysed / 100)).toFixed()||null;
+        var statOtherPercent = (statOther / (statAnalysed / 100)).toFixed()||null;
+        var statAgreedPercent = (statAgreed / (statAnalysed / 100)).toFixed()||null;
 
         if (statCreatedPercent === 'Infinity') statCreatedPercent = '?';
         if (statRejectedPercent === 'Infinity') statRejectedPercent = '?';
-        if (statPendingPercent === 'Infinity'||isNaN(statPendingPercent)) statPendingPercent = '?';
+        if (statOtherPercent === 'Infinity'||isNaN(statOtherPercent)) statOtherPercent = '?';
+        if (statAgreedPercent === 'Infinity'||isNaN(statAgreedPercent)) statAgreedPercent = '?';
 
         var badgeCounts = [ 0, 100, 750, 2500, 5000, 10000 ];
         var badgeNames = [ 'None', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Onyx' ];
@@ -157,20 +160,91 @@
         var badgeToGo = badgeCounts[badgeLevel+1] - totalForBadge||'-';
         var badgeNextNameText = badgeNames[badgeLevel+1]||'-';
 
-        $('<span>')
-            .insertBefore($('button.pull-right'))
-            .css('white-space', 'pre')
-            .css('float', 'left')
-            .html(statLevel+'  /  <span title="'+badgeAltText+'">'+badgeNameText+ ' badge '+
-                totalForBadge.toLocaleString()+
-                '  /  '+badgeToGo.toLocaleString()+' to get '+badgeNextNameText+'</span><br>'+
-                '<small>Analysed: '+(statAnalysed.toLocaleString()||'?')+
-                '</small>  /  <small>Created: '+(statCreated.toLocaleString()||'?')+' - '+
-                    (statCreatedPercent||'?')+'%'+
-                '</small>  /  <small>Rejected: '+(statRejected.toLocaleString()||'?')+' - '+
-                    (statRejectedPercent||'?')+'%'+
-                '</small>  /  <small>Other: '+(statPending.toLocaleString()||'?')+' - '+
-                    (statPendingPercent||'?')+'%</small>'
+        $('<div class="container" id="agentStats">')
+            .insertBefore('div#AnswersController')
+            .css('color', '#008780')
+            .css('margin-top', '1em')
+            .css('margin-bottom', '1em')
+            .css('font-size', 'small')
+            .css('cursor', 'default')
+            .html(
+                '<div class="container col-md-6" '+
+                    'style="border-top: 1px solid #008780; border-bottom: 1px solid #008780; padding: 0; '+
+                    'padding-top: 1em; padding-bottom: 1em;">'+
+                    '<div id="agentStatsTag" style="display: none; text-align: center;">'+
+                        'Click here to show stats'+
+                    '</div>'+
+                    '<div class="row">'+
+                        '<div class="col-xs-12 col-sm-4 col-md-4">'+
+                            statLevel+
+                        '</div>'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                            badgeNameText+' badge '+totalForBadge.toLocaleString()+
+                        '</div>'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                            badgeToGo.toLocaleString()+' to get '+badgeNextNameText+
+                        '</div>'+
+                    '</div>'+
+                    '<div class="row">'+
+                        '<div class="col-xs-12 col-sm-4 col-md-4">'+
+                            'Analysed: '+(statAnalysed.toLocaleString()||'?')+
+                        '</div>'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                            'Created: '+(statCreated.toLocaleString()||'?')+' - '+(statCreatedPercent||'?')+'%'+
+                        '</div>'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                            'Rejected: '+(statRejected.toLocaleString()||'?')+' - '+(statRejectedPercent||'?')+'%'+
+                        '</div>'+
+                    '</div>'+
+                    '<div class="row">'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                            'Agreed: '+(statAgreed.toLocaleString()||'?')+' - '+(statAgreedPercent||'?')+'%'+
+                        '</div>'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                            'Other: '+(statOther.toLocaleString()||'?')+' - '+(statOtherPercent||'?')+'%'+
+                        '</div>'+
+                        '<div class="col-xs-6 col-sm-4 col-md-4">'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'
             );
+
+        $("div#agentStats").click(function(){
+            agentStatsToggle();
+            agentStatsSetShowOrHide();
+        });
+
+        agentStatsToggleCheckCookieOnLoad();
+
+        function agentStatsToggle() {
+            var statsAreHidden = ( $("div#agentStatsTag").css('display') != 'none' );
+            if (statsAreHidden) {
+                $("div#agentStatsTag").slideUp(500);
+                $("div#agentStatsTag").fadeOut(1000);
+                $("div#agentStats > div > div.row").delay(1000).slideDown(500);
+                $("div#agentStats > div > div.row").delay(1000).fadeIn(1000);
+            } else {
+                $("div#agentStats > div > div.row").slideUp(500);
+                $("div#agentStats > div > div.row").fadeOut(1000);
+                $("div#agentStatsTag").delay(1000).slideDown(500);
+                $("div#agentStatsTag").delay(1000).fadeIn(1000);
+            }
+        }
+
+        function agentStatsSetShowOrHide() {
+            var agentStatsHide = localStorage.getItem("agentStatsHide");
+            if (agentStatsHide) {
+                localStorage.removeItem("agentStatsHide");
+            } else {
+                localStorage.setItem("agentStatsHide", "true");
+            }
+        }
+
+        function agentStatsToggleCheckCookieOnLoad() {
+            var agentStatsHide = localStorage.getItem("agentStatsHide");
+            if (agentStatsHide) {
+                agentStatsToggle();
+            }
+        }
     }
 })();
